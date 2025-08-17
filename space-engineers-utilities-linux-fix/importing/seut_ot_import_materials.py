@@ -49,6 +49,8 @@ class SEUT_OT_Import_Materials(Operator):
 
 def import_materials(self, context, filepath):
 
+    print(f"Importing materials from: {filepath}")
+
     preferences = get_preferences()
     materials_path = os.path.join(get_abs_path(preferences.asset_path), 'Materials')
 
@@ -215,6 +217,8 @@ def load_image(self, context, path: str, materials_path: str, material: bpy.type
         if os.path.exists(f"{img_path}.{o.lower()}"):
             img_path += f".{o.lower()}"
             break
+    
+    print(f"Loading image: {img_path}")
 
     if not os.path.exists(img_path):
         seut_report(self, context, 'WARNING', True, 'W011', img_path, material.name)
