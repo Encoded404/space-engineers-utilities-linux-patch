@@ -207,7 +207,10 @@ def load_image(self, context, path: str, materials_path: str, material: bpy.type
 
     img_path = os.path.splitext(os.path.join(seut_path, path))[0]
     for o in supported_image_types:
-        if os.path.exists(f"{img_path}.{o}") or os.path.exists(f"{img_path}.{o.lower()}"):
+        if os.path.exists(f"{img_path}.{o}"):
+            img_path += f".{o}"
+            break
+        if os.path.exists(f"{img_path}.{o.lower()}"):
             img_path += f".{o.lower()}"
             break
 
