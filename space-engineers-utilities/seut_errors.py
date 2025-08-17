@@ -136,7 +136,9 @@ def check_export(self, context, can_report=True):
         seut_report(self, context, 'ERROR', can_report, 'E045', get_abs_path(scene.seut.mod_path))
         return {'CANCELLED'}
 
-    if path.find("Models\\") != -1 or (path + "\\").find("Models\\") != -1:
+    # Use cross-platform path checking
+    models_with_sep: str = f"Models{os.sep}"
+    if path.find(models_with_sep) != -1 or (path + os.sep).find(models_with_sep) != -1:
         pass
     else:
         seut_report(self, context, 'ERROR', can_report, 'E014', path, scene.name)

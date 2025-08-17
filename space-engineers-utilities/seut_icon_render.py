@@ -185,7 +185,9 @@ class SEUT_OT_IconRenderPreview(Operator):
 
     @classmethod
     def poll(cls, context):
-        if context.scene.render.filepath == '/tmp\\':
+        # Use cross-platform tmp path check
+        tmp_path: str = f'/tmp{os.sep}'
+        if context.scene.render.filepath == tmp_path:
             Operator.poll_message_set("A render folder must first be defined.")
             return False
 
@@ -197,8 +199,15 @@ class SEUT_OT_IconRenderPreview(Operator):
         scene = context.scene
         data = get_seut_blend_data()
 
-        if not os.path.isdir(get_abs_path(scene.render.filepath)):
-            os.makedirs(get_abs_path(scene.render.filepath))
+        # Validate and create render directory
+        render_path: str = get_abs_path(scene.render.filepath)
+        try:
+            if not os.path.isdir(render_path):
+                os.makedirs(render_path)
+        except (OSError, IOError) as e:
+            print(f"Error creating render directory '{render_path}': {e}")
+            seut_report(self, context, 'ERROR', True, 'E003', "render directory", render_path)
+            return {'CANCELLED'}
 
         clear_selection(context)
 
@@ -239,7 +248,7 @@ class SEUT_OT_IconRenderPreview(Operator):
         file_format = scene.seut.render_output_type.lower()
         if file_format == 'dds':
             file_format = 'png'
-        scene.render.filepath = get_abs_path(scene.render.filepath) + "\\" + scene.seut.subtypeId + '.' + file_format
+        scene.render.filepath = get_abs_path(scene.render.filepath) + os.sep + scene.seut.subtypeId + '.' + file_format
 
         bpy.ops.render.render()
         bpy.ops.render.view_show('INVOKE_DEFAULT')
@@ -293,8 +302,15 @@ class SEUT_OT_CopyRenderOptions(Operator):
         if os.path.isfile(get_abs_path(scene.render.filepath)):
             os.path.dirname(get_abs_path(scene.render.filepath))
 
-        if not os.path.exists(get_abs_path(scene.render.filepath)):
-            os.makedirs(get_abs_path(scene.render.filepath))
+        # Validate and create render directory
+        render_path: str = get_abs_path(scene.render.filepath)
+        try:
+            if not os.path.exists(render_path):
+                os.makedirs(render_path)
+        except (OSError, IOError) as e:
+            print(f"Error creating render directory '{render_path}': {e}")
+            seut_report(self, context, 'ERROR', True, 'E003', "render directory", render_path)
+            return {'CANCELLED'}
 
         for scn in bpy.data.scenes:
             scn.render.filepath = scene.render.filepath

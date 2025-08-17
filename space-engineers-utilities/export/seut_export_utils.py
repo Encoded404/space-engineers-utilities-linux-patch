@@ -750,7 +750,9 @@ class ExportSettings:
                     return False
 
                 elif out_str.find("System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.") != -1:
-                    temp_string = out_str[out_str.find("\\Models\\") + len("\\Models\\"):]
+                    # Use cross-platform path separator
+                    models_path: str = f"{os.sep}Models{os.sep}"
+                    temp_string = out_str[out_str.find(models_path) + len(models_path):]
                     temp_string = temp_string[:temp_string.find(".fbx")]
                     seut_report(self, context, 'ERROR', False, 'E043', temp_string + ".fbx")
                     return False

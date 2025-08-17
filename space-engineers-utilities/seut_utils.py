@@ -291,11 +291,12 @@ def create_relative_path(path: str, folder_name: str):
     """Returns the path capped off before the last occurrence of the foldername, returns False if foldername is not found in path"""
 
     path = get_abs_path(path)
-    offset = path.rfind("\\" + folder_name + "\\")
+    # Use os.sep for cross-platform path separator compatibility
+    offset = path.rfind(os.sep + folder_name + os.sep)
 
     if offset == -1:
-        if path.endswith("\\" + folder_name):
-            return path[path.rfind("\\" + folder_name) + 1:]
+        if path.endswith(os.sep + folder_name):
+            return path[path.rfind(os.sep + folder_name) + 1:]
         else:
             return False
     else:
@@ -312,8 +313,9 @@ def wrap_text(text: str, width: int):
         if len(l) > width:
             temp = l[:width]
             space_idx = temp.rfind(" ")
-            if temp.rfind("\\") > space_idx:
-                space_idx = temp.rfind("\\") + 1
+            # Use os.sep for cross-platform compatibility
+            if temp.rfind(os.sep) > space_idx:
+                space_idx = temp.rfind(os.sep) + 1
             lines_new.append(l[:space_idx])
 
             overflow = l[space_idx:]

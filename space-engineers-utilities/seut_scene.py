@@ -302,7 +302,9 @@ def update_export_exportPath(self, context):
         seut_report(self, context, 'ERROR', False, 'E045', get_abs_path(self.mod_path))
         self.export_exportPath = ""
 
-    if path.find("Models\\") != -1 or (path + "\\").find("Models\\") != -1:
+    # Use cross-platform path checking
+    models_with_sep: str = f"Models{os.sep}"
+    if path.find(models_with_sep) != -1 or (path + os.sep).find(models_with_sep) != -1:
         pass
     else:
         seut_report(self, context, 'ERROR', False, 'E014', path, scene.name)
@@ -337,10 +339,25 @@ def update_mod_path(self, context):
     else:
         self.export_exportPath = os.path.join(self.mod_path, self.export_exportPath[self.export_exportPath.rfind("Models"):])
 
-    if scene.render.filepath in ["", "/tmp\\", "//"]:
+    tmp_paths: list[str] = ["", "/tmp/", "//"]
+    if scene.render.filepath in tmp_paths:
         scene.render.filepath = os.path.join(get_abs_path(self.mod_path), "Textures", "GUI", "Icons", "Cubes")
     else:
-        scene.render.filepath = os.path.join(get_abs_path(self.mod_path), scene.render.filepath[scene.render.filepath.find("Textures"):])
+        # Check if the current filepath is within the mod path and contains "Textures"
+        mod_abs_path: str = get_abs_path(self.mod_path)
+        current_abs_path: str = get_abs_path(scene.render.filepath)
+        
+        if current_abs_path.startswith(mod_abs_path) and "Textures" in current_abs_path:
+            # Extract the path relative to mod path starting from "Textures"
+            textures_index: int = current_abs_path.find("Textures")
+            if textures_index != -1:
+                scene.render.filepath = os.path.join(mod_abs_path, current_abs_path[textures_index:])
+            else:
+                # Fallback to default if "Textures" not found
+                scene.render.filepath = os.path.join(mod_abs_path, "Textures", "GUI", "Icons", "Cubes")
+        else:
+            # Path is not within mod or doesn't contain "Textures", reset to default
+            scene.render.filepath = os.path.join(mod_abs_path, "Textures", "GUI", "Icons", "Cubes")
 
 
 def poll_linkedScene(self, object):

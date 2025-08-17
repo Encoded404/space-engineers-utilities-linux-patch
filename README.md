@@ -6,6 +6,7 @@ I've modified the Space Engineers Utilities addon to better support Linux by fix
 
 ### 1. Improved Path Conversion (`seut_utils.py`)
 - Added `linux_path_to_wine_path()` function to properly convert Linux paths to Wine-compatible Windows paths
+- made all hardcoded `\\` paths use os.sep instead
 
 ### 2. Fixed Tool Execution (`utils/seut_tool_utils.py`)
 - Added Wine support for Windows `.exe` tools in the `call_tool` function
@@ -15,6 +16,20 @@ I've modified the Space Engineers Utilities addon to better support Linux by fix
 
 ### 3. Fixed Havok HKT Export (`export/havok/seut_havok_hkt.py`)
 - made paths convert to wine paths (Z:\\...) using the global path conversion util tool
+
+### 4. Fixed file searching code (`seut_ot_import_materials.py`)
+- fixed code that was case sensitive on linux and not on windows
+- made all hardcoded `\\` paths use os.sep instead 
+
+### 5. made code use .lower (`seut-icon-render.py`)
+- use .lower() to get around case sensitive render output type
+
+### 6. Fixed all other hardcoded `\\` paths in
+- seut_scene.py
+- seut_errors.py
+- seut_export_utils.py
+
+
 
 ## Requirements for Linux
 
