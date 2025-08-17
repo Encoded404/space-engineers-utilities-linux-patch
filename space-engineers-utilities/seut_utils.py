@@ -1,6 +1,7 @@
 import bpy
 import sys
 import os
+import platform
 
 from bpy.types      import Operator
 from math           import pi
