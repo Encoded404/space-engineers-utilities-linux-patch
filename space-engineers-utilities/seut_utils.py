@@ -10,6 +10,20 @@ from .seut_collections              import get_collections, get_cols_by_type
 from .seut_errors                   import check_collection, get_abs_path, seut_report
 
 
+def linux_path_to_wine_path(linux_path: str) -> str:
+    """Converts a Linux path to a Wine-compatible Windows path."""
+    if platform.system() != "Linux":
+        return linux_path
+    
+    # Convert absolute Linux paths to Wine Z: drive paths
+    if os.path.isabs(linux_path):
+        # Remove leading slash and replace with Z:
+        wine_path: str = "Z:" + linux_path.replace('/', '\\')
+        return wine_path
+    else:
+        # For relative paths, just convert slashes
+        return linux_path.replace('/', '\\')
+
 class SEUT_OT_UpdateSubpartInstances(Operator):
     """Updates the subpart instances in the scene"""
     bl_idname = "scene.update_subpart_instances"

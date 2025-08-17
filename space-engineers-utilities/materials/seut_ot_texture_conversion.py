@@ -118,21 +118,21 @@ class SEUT_OT_MassConvertTextures(Operator):
         target_dir = os.path.join(preferences.asset_path, 'Textures')
 
         dirs_to_convert = [
-            "Models\\Cubes",
-            "Models\\Cubes\\armor",
-            "Models\\Cubes\\Damaged",
-            "Models\\Cubes\\lods",
-            "Models\\Physical_item",
-            "Models\\Debris",
-            "Models\\Characters\\Astronaut",
-            "Models\\Characters\\Plushie",
-            "Models\\Environment\\Bushes",
-            "Models\\Environment\\Grass",
-            "Models\\Environment\\Trees",
-            "Models\\Environment\\Props",
-            "Models\\Environment\\SafeZone",
-            "Models\\Weapons",
-            "Models\\Debug",
+            "Models/Cubes",
+            "Models/Cubes/armor",
+            "Models/Cubes/Damaged",
+            "Models/Cubes/lods",
+            "Models/Physical_item",
+            "Models/Debris",
+            "Models/Characters/Astronaut",
+            "Models/Characters/Plushie",
+            "Models/Environment/Bushes",
+            "Models/Environment/Grass",
+            "Models/Environment/Trees",
+            "Models/Environment/Props",
+            "Models/Environment/SafeZone",
+            "Models/Weapons",
+            "Models/Debug",
             "Particles"
         ]
 

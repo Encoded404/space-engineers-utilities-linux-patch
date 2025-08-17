@@ -6,7 +6,7 @@ from ..seut_export_utils        import ExportSettings
 from ...utils.called_tool_type  import ToolType
 from ...utils.seut_xml_utils    import update_subelement, format_entry
 from ...seut_errors             import seut_report
-
+from ...seut_utils              import linux_path_to_wine_path
 
 def convert_fbx_to_fbxi_hkt(context, settings: ExportSettings, source: str, target: str):
     """Converts the FBX created by export to FBXImporter FBX for HKT creation."""
@@ -18,7 +18,6 @@ def convert_fbx_to_fbxi_hkt(context, settings: ExportSettings, source: str, targ
         logfile=f"{target}.convert.log"
     )
 
-
 def convert_fbxi_hkt_to_hkt(self, context, settings: ExportSettings, source: str, target: str, adjustments: dict = None):
     """Converts the HKT created by FBXImporter to the final HKT."""
 
@@ -28,14 +27,20 @@ def convert_fbxi_hkt_to_hkt(self, context, settings: ExportSettings, source: str
     try:
         with hko.file as tempfile_to_process:
             tempfile_to_process.write(havok_options)
+        
+        # Convert paths for Wine compatibility on Linux
+        hko_wine_path: str = linux_path_to_wine_path(hko.name)
+        target_wine_path: str = linux_path_to_wine_path(target)
+        source_wine_path: str = linux_path_to_wine_path(source)
+        logfile_wine_path: str = linux_path_to_wine_path(target + ".filter.log")
 
         # -t is for standard ouput, -s designates a filter set (hko created above), -p designates path.
         # Above referenced from running "hctStandAloneFilterManager.exe -h"
         result = settings.callTool(
             context,
-            [settings.havokfilter, '-t', '-s', hko.name, '-p', target, source],
+            [settings.havokfilter, '-t', '-s', hko_wine_path, '-p', target_wine_path, source_wine_path],
             ToolType(2),
-            logfile=f"{target}.filter.log",
+            logfile=logfile_wine_path,
             successfulExitCodes=[0,1]
         )
 

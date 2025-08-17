@@ -4,22 +4,36 @@ import subprocess
 import threading
 
 from ..seut_errors          import get_abs_path
-
+from ..seut_utils              import linux_path_to_wine_path
 
 def call_tool(args: list, logfile=None) -> list:
+    # check if the tool ends with .exe, if it does run it with wine
+    if args[0].endswith('.exe'):
+        print(f"SEUT: Running Windows tool with Wine: {args[0]}")
+        args = ["wine"] + args
+
+        itterator = 2
+        while itterator < len(args):
+            if args[itterator].startswith('/home'):
+                args[itterator] = linux_path_to_wine_path(args[itterator])
+            itterator += 1
 
     try:
-        out = subprocess.check_output(args, cwd=None, stderr=subprocess.STDOUT, shell=True)
+        print(f"SEUT: Executing command: {' '.join(args)}")
+        out = subprocess.check_output(args, cwd=None, stderr=subprocess.STDOUT, shell=False)
         if logfile is not None:
             write_to_log(logfile, out, args=args)
         return [0, out, args]
 
     except subprocess.CalledProcessError as e:
+        print(f"SEUT: Command failed with return code {e.returncode}")
+        print(f"SEUT: Error output: {e.output}")
         if logfile is not None:
             write_to_log(logfile, e.output, args=args)
         return [e.returncode, e.output, args]
 
     except Exception as e:
+        print(f"SEUT: Exception occurred: {e}")
         print(e)
 
 
