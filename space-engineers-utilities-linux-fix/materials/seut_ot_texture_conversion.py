@@ -198,7 +198,7 @@ def mass_convert_textures(self, context, dirs: list, target_dir: str, preset: st
 
         timer = time.time()
         results = []
-        results = call_tool_threaded(commands, 10, logfile)
+        results = call_tool_threaded(commands, 25, logfile)
         duration = time.time() - timer
 
         converted = 0
