@@ -737,7 +737,7 @@ class ExportSettings:
 
     def callTool(self, context, cmdline, tooltype, logfile=None, cwd=None, successfulExitCodes=[0], loglines=[], logtextInspector=None):
         try:
-            out = subprocess.check_output(cmdline, cwd=cwd, stderr=subprocess.STDOUT, shell=True)
+            out = subprocess.check_output(cmdline, cwd=cwd, stderr=subprocess.STDOUT, shell=False)
             if self.isLogToolOutput and logfile:
                 write_to_log(logfile, out, cmdline=cmdline, cwd=cwd, loglines=loglines)
             if logtextInspector is not None:

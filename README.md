@@ -2,34 +2,7 @@
 
 ## Summary of Changes Made
 
-I've modified the Space Engineers Utilities addon to better support Linux by fixing Wine integration and path handling issues.
-
-### 1. Improved Path Conversion (`seut_utils.py`)
-- Added `linux_path_to_wine_path()` function to properly convert Linux paths to Wine-compatible Windows paths
-- made all hardcoded `\\` paths use os.sep instead
-
-### 2. Fixed Tool Execution (`utils/seut_tool_utils.py`)
-- Added Wine support for Windows `.exe` tools in the `call_tool` function
-- Added debug output to help troubleshoot execution issues
-- Changed from `shell=True` to `shell=False` so arguments work with wine
-- automatically modify the paths to wine paths (Z:\\...) using the global path conversion util tool
-
-### 3. Fixed Havok HKT Export (`export/havok/seut_havok_hkt.py`)
-- made paths convert to wine paths (Z:\\...) using the global path conversion util tool
-
-### 4. Fixed file searching code (`seut_ot_import_materials.py`)
-- fixed code that was case sensitive on linux and not on windows
-- made all hardcoded `\\` paths use os.sep instead 
-
-### 5. made code use .lower (`seut-icon-render.py`)
-- use .lower() to get around case sensitive render output type
-
-### 6. Fixed all other hardcoded `\\` paths in
-- seut_scene.py
-- seut_errors.py
-- seut_export_utils.py
-
-
+I've modified the Space Engineers Utilities addon to better support Linux by adding Wine integration when running windows tools and general path handling issues because of hardcoded '\\' values.
 
 ## Requirements for Linux
 
@@ -38,7 +11,11 @@ To use this addon on Linux, you need:
 1. **Wine installed**: `sudo dnf install wine` (fedora) or equivalent for your distribution
 2. **Wine configured**: Run `wine wineboot` if you dont already have a default wine prefix
 3. **Required Windows tools**: 
-- you need to install Havok Content Tools, net framework, and visual cpp redistrutable in your defaut wine prefix
+- you need to install Havok Content Tools, net framework 3.5 service package 1, and visual cpp redistrutable in your defaut wine prefix
+
+- you can install visual cpp redistrutable with this command ``winetricks -q vcrun2012``
+- you can install net framework 3.5 service package 1 with this command ``wintricks -q dotnet35sp1``
+- look at the space engineers SEUT wiki for the exe file (here)[https://spaceengineers.wiki.gg/wiki/Modding/Tools/Space_Engineers_Utilities#Downloads] and simply install it with ``wine HavokContentTools_2013-1-0_20130717_64Bit_PcXs.exe`` (name may vary)
 
 ## Troubleshooting
 

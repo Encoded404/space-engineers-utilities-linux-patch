@@ -67,7 +67,7 @@ def export(self, context, export_materials=True):
     subparts = scene.seut.linkSubpartInstances
     scene.seut.linkSubpartInstances = False
 
-    if not os.path.isdir(get_abs_path(scene.seut.mod_path) + '\\'):
+    if not os.path.isdir(get_abs_path(scene.seut.mod_path) + '/'):
         seut_report(self, context, 'ERROR', True, 'E019', "Mod", scene.name)
         scene.seut.linkSubpartInstances = subparts
         return {'CANCELLED'}
@@ -198,6 +198,7 @@ def export_main(self, context):
     """Exports the Main collection"""
 
     scene = context.scene
+    print(f"found collection {scene}")
     collections = get_collections(scene)
 
     # Checks whether collection exists, is excluded or is empty

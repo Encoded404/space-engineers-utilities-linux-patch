@@ -154,6 +154,8 @@ def check_export(self, context, can_report=True):
 def check_collection(self, context, scene, collection, partial_check=True):
     """Check if collection exists, is not excluded and is not empty."""
 
+    print(f"checking collection with collection {collection} and scene {scene}")
+
     if collection is None:
         if not partial_check:
             seut_report(self, context, 'ERROR', False, 'E002')
@@ -167,6 +169,7 @@ def check_collection(self, context, scene, collection, partial_check=True):
 
     if len(collection.objects) == 0 and collection.name[:4] != 'SEUT':
         if not partial_check:
+            print(f"this error is usually pretty uninformative, the main collection {collection} is empty!")
             seut_report(self, context, 'ERROR', False, 'E002', '"' + collection.name + '"')
         return {'CANCELLED'}
 
