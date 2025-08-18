@@ -43,6 +43,17 @@ def call_tool_threaded(commands: list, thread_count: int, logfile=None):
     results = []
     commands_left = commands
 
+    for command in commands_left:
+        if command[0].endswith('.exe'):
+            print(f"SEUT: Running Windows tool with Wine: {command[0]}")
+            command = ["wine"] + command
+
+            itterator = 2
+            while itterator < len(command):
+                if command[itterator].startswith('/home'):
+                    command[itterator] = linux_path_to_wine_path(command[itterator])
+                itterator += 1
+
     while len(commands_left) > 0:
         if len(threads) < thread_count:
             c = commands_left[0]
