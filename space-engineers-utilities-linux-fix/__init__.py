@@ -12,17 +12,17 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 bl_info = {
-    "name": "Space Engineers Utilities",
+    "name": "Space Engineers Utilities Linux Patch",
     "description": "This addon offers various utilities to make creating assets for Space Engineers easier.",
-    "author": "enenra, Stollie",
+    "author": "enenra, Stollie, Encoded404",
     "version": (1, 2, 1),
     "dev_version": 4,
     "dev_tag": "alpha",
     "blender": (4, 5, 0),
     "location": "View3D > Tools",
     "doc_url": "https://spaceengineers.wiki.gg/wiki/Modding/Tools/Space_Engineers_Utilities",
-    "tracker_url": "https://github.com/enenra/space-engineers-utilities/issues",
-    "git_url": "https://github.com/enenra/space-engineers-utilities",
+    "tracker_url": "https://github.com/Encoded404/space-engineers-utilities-linux-patch/issues",
+    "git_url": "https://github.com/Encoded404/space-engineers-utilities-linux-patch",
     "support": "COMMUNITY",
     "category": "Modding"
 }

@@ -60,6 +60,8 @@ def import_materials(self, context, filepath):
     elif not os.path.isdir(materials_path):
         os.makedirs(materials_path, exist_ok=True)
 
+    #print(f"asset path confirmed: {materials_path}")
+
     try:
         tree = ET.parse(filepath)
     except:
@@ -70,12 +72,17 @@ def import_materials(self, context, filepath):
     if not root.tag == 'MaterialsLib' and not root.tag == 'Model':
         seut_report(self, context, 'ERROR', True, 'E040')
         return {'CANCELLED'}
+    
+    #print(f"suitable root tag found: {root.tag}")
 
     imported = []
     not_imported = []
     for mat in root:
-        if mat.tag != 'Material':
+        if mat.tag != 'MaterialRef':
+            print(f"Skipping non-material tag: {mat.tag}")
             continue
+
+        print(f"Processing material: {mat.attrib['Name']}")
 
         if mat.attrib['Name'] in bpy.data.materials:
             nodes = bpy.data.materials[mat.attrib['Name']].node_tree.nodes
@@ -85,31 +92,40 @@ def import_materials(self, context, filepath):
                     found = True
 
             if found:
-                not_imported.append(mat.attrib['Name'])
                 print(f"Material '{mat.attrib['Name']}' is already imported and will not be re-imported.")
+                not_imported.append(mat.attrib['Name'])
                 continue
             else:
                 print(f"Material '{mat.attrib['Name']}' is already imported but will be re-imported because its empty or invalid.")
                 for node in nodes:
                     nodes.remove(node)
                 material = create_material(bpy.data.materials[mat.attrib['Name']])
-                material.name = mat.attrib['Name']
+                print(f"Re-importing material '{material.name}' with name '{mat.attrib['Name']}'")
+                # for whatever fucking reason, if you set the name to the old linked material name, it will not work.
+                # instead it apparently just sets the material back to the old linked material.
+                # this is a workaround to avoid that until i figure out why.
+                material.rename(mat.attrib['Name']+"_fix", mode="NEVER")
 
         else:
             print(f"Material '{mat.attrib['Name']}' is not imported yet. creating.")
             material = create_material()
-            material.name = mat.attrib['Name']
+            material.rename(mat.attrib['Name'], mode="NEVER")
 
         for node in material.node_tree.nodes:
             if node.name == 'CM':
+                #print(f"Found ColorMetal node in material '{material.name}'")
                 cm_node = node
             elif node.name == 'NG':
+                #print(f"Found NormalGloss node in material '{material.name}'")
                 ng_node = node
             elif node.name == 'ADD':
+                #print(f"Found AddMaps node in material '{material.name}'")
                 add_node = node
             elif node.name == 'ALPHAMASK':
+                #print(f"Found Alphamask node in material '{material.name}'")
                 am_node = node
             elif node.name == 'SEUT_NODE_GROUP':
+                #print(f"Found SEUT Node Group in material '{material.name}'")
                 ng = node
 
         cm_img = None

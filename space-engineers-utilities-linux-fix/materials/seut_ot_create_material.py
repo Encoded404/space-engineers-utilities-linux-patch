@@ -43,6 +43,11 @@ def create_material(material=None):
         return link_material('SEUT Material', 'SEUT.blend', False)
 
     temp = link_material('SEUT Material', 'SEUT.blend', False)
+    #oldName: str = material.name
+    #print(f"old material has {material.users} new one has {temp.users}")
     material.user_remap(temp)
-    temp.name = material.name
+    #print(f"after remap old material has {material.users} users new one has {temp.users} users")
+    #print(f"old material is {'not' if bpy.data.materials[material.name].library is None else ''} a link and new one is {'not' if bpy.data.materials[temp.name].library is None else ''} a link")
+    temp.rename(material.name, mode="NEVER")
+    #print(f"Material '{oldName}' has been replaced with '{temp.name}'")
     return temp
