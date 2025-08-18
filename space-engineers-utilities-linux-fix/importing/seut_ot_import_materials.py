@@ -86,14 +86,17 @@ def import_materials(self, context, filepath):
 
             if found:
                 not_imported.append(mat.attrib['Name'])
+                print(f"Material '{mat.attrib['Name']}' is already imported and will not be re-imported.")
                 continue
             else:
+                print(f"Material '{mat.attrib['Name']}' is already imported but will be re-imported because its empty or invalid.")
                 for node in nodes:
                     nodes.remove(node)
                 material = create_material(bpy.data.materials[mat.attrib['Name']])
                 material.name = mat.attrib['Name']
 
         else:
+            print(f"Material '{mat.attrib['Name']}' is not imported yet. creating.")
             material = create_material()
             material.name = mat.attrib['Name']
 
@@ -129,15 +132,19 @@ def import_materials(self, context, filepath):
                         break
 
             elif param.attrib['Name'] == 'ColorMetalTexture':
+                print(f"Loading ColorMetalTexture for material '{material.name}' from: {param.text}")
                 cm_img = load_image(self, context, param.text, materials_path, material)
 
             elif param.attrib['Name'] == 'NormalGlossTexture':
+                print(f"Loading NormalGlossTexture for material '{material.name}' from: {param.text}")
                 ng_img = load_image(self, context, param.text, materials_path, material)
 
             elif param.attrib['Name'] == 'AddMapsTexture':
+                print(f"Loading AddMapsTexture for material '{material.name}' from: {param.text}")
                 add_img = load_image(self, context, param.text, materials_path, material)
 
             elif param.attrib['Name'] == 'AlphamaskTexture':
+                print(f"Loading AlphamaskTexture for material '{material.name}' from: {param.text}")
                 am_img = load_image(self, context, param.text, materials_path, material)
 
             elif param.attrib['Name'] == 'Facing':
