@@ -736,6 +736,17 @@ class ExportSettings:
         return self._mwmbuilder
 
     def callTool(self, context, cmdline, tooltype, logfile=None, cwd=None, successfulExitCodes=[0], loglines=[], logtextInspector=None):
+        # check if the tool ends with .exe, if it does run it with wine
+        if cmdline[0].endswith('.exe'):
+            print(f"SEUT: Running Windows tool with Wine: {cmdline[0]}")
+            cmdline = ["wine"] + cmdline
+
+            itterator = 2
+            while itterator < len(cmdline):
+                if cmdline[itterator].startswith('/home'):
+                    cmdline[itterator] = linux_path_to_wine_path(cmdline[itterator])
+                itterator += 1
+
         try:
             out = subprocess.check_output(cmdline, cwd=cwd, stderr=subprocess.STDOUT, shell=False)
             if self.isLogToolOutput and logfile:
